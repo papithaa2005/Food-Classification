@@ -1,0 +1,241 @@
+/* =============================================
+   NAVBAR
+   ============================================= */
+
+.navbar {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* =============================================
+   DESKTOP LAYOUT — 3-column grid
+   Brand (left) | Links (center) | Button (right)
+   ============================================= */
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+/* LEFT — Brand */
+.navbar-brand {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  text-decoration: none;
+  white-space: nowrap;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease;
+  justify-self: start;
+}
+
+.navbar-brand:hover {
+  color: #0284c7;
+  text-decoration: none;
+}
+
+/* CENTER — Nav links */
+.navbar-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 24px;
+  flex: 1;
+}
+
+.navbar-menu li {
+  display: flex;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  color: #64748b;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 7px 16px;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.nav-link:hover {
+  background: transparent;
+  color: #0284c7;
+  text-decoration: none;
+}
+
+.nav-link.active {
+  background: transparent;
+  color: #0284c7;
+  font-weight: 600;
+  border-bottom: 2px solid #0284c7;
+  border-radius: 0;
+}
+
+/* RIGHT — Action */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* Button */
+.btn-nav {
+  display: inline-block;
+  background: #0ea5e9;
+  color: #ffffff !important;
+  text-decoration: none !important;
+  font-size: 0.875rem;
+  font-weight: 700;
+  padding: 9px 20px;
+  border-radius: 8px;
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.28);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.btn-nav:hover {
+  background: #0284c7;
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
+  transform: translateY(-1px);
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+
+/* =============================================
+   MOBILE — hidden on desktop
+   ============================================= */
+
+.navbar-mobile {
+  display: none;
+}
+
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #475569;
+  border-radius: 2px;
+  transition: background 0.2s;
+}
+
+.hamburger:hover span {
+  background: #0284c7;
+}
+
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  padding: 8px 16px 12px;
+  border-top: 1px solid #e2e8f0;
+  gap: 2px;
+}
+
+.mobile-link {
+  display: block;
+  color: #475569;
+  text-decoration: none;
+  font-size: 0.93rem;
+  font-weight: 500;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.mobile-link:hover {
+  background: #f0f9ff;
+  color: #0284c7;
+  text-decoration: none;
+}
+
+.mobile-link.active {
+  background: #dbeafe;
+  color: #0284c7;
+  font-weight: 600;
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+
+@media (max-width: 768px) {
+  /* Hide desktop navbar */
+  .navbar-container {
+    display: none;
+  }
+
+  /* Show mobile navbar */
+  .navbar-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    height: 58px;
+  }
+
+  .mobile-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Show mobile menu when open */
+  .mobile-menu {
+    display: flex;
+  }
+
+  .btn-nav {
+    padding: 8px 14px;
+    font-size: 0.82rem;
+  }
+
+  .user-chip {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-mobile {
+    padding: 0 12px;
+    height: 54px;
+  }
+
+  .navbar-brand {
+    font-size: 1.05rem;
+  }
+}
