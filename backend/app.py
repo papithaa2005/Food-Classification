@@ -117,11 +117,141 @@ def calculate_tdee(w, h, age, gender, activity):
     }
     return round(bmr * multipliers.get(activity.lower(), 1.55), 1)
 
+# def get_recommendation(cal, daily, bmi, gender):
+
+
+
+#     bmi_cat     = get_bmi_category(bmi)
+#     meal_target = daily / 3
+#     pct         = (cal / daily) * 100 if daily > 0 else 0
+
+#     if cal <= meal_target:
+#         status, status_text = 'success', 'Safe meal - within single-meal target'
+#     elif cal <= meal_target * 1.2:
+#         status, status_text = 'warning', 'Moderate - slightly above meal target'
+#     else:
+#         status, status_text = 'danger',  'High calorie alert - exceeds meal target'
+
+#     recs   = []
+#     avoids = []
+
+#     if bmi_cat == 'Underweight':
+#         recs = [
+#             'Increase calorie intake with nutrient-dense foods like nuts and avocado',
+#             'Add protein-rich foods (eggs, legumes, dairy) at every meal',
+#             'Eat 5-6 smaller meals throughout the day to boost total intake',
+#             'Include healthy fats like olive oil, seeds, and nut butters',
+#             'Consult a nutritionist for a personalized weight-gain meal plan',
+#         ]
+#         avoids = [
+#             'Avoid skipping meals - even small snacks count toward your daily goal',
+#             'Avoid excessive cardio without compensating with extra calories',
+#             'Avoid low-fat or diet versions of foods; you need the calories',
+#             'Avoid prolonged gaps (>4 hrs) between meals',
+#             'Avoid caffeine on an empty stomach - it suppresses appetite',
+#         ]
+#     elif bmi_cat == 'Normal':
+#         recs = [
+#             'Maintain your balanced diet - you are in the healthy weight range',
+#             'Aim for 25-30g of fiber daily through vegetables, fruits, and whole grains',
+#             'Stay hydrated with 2-3 liters of water to support metabolism',
+#             'Include lean proteins to support muscle maintenance and satiety',
+#             'Continue regular physical activity (150 min/week moderate intensity)',
+#         ]
+#         avoids = [
+#             'Avoid ultra-processed snacks that add empty calories',
+#             'Avoid skipping breakfast - it leads to overeating later',
+#             'Avoid sugary beverages; they add calories without nutrition',
+#             'Avoid large portions late at night - digestion slows down',
+#             'Avoid crash diets; they disrupt your current healthy balance',
+#         ]
+#     elif bmi_cat == 'Overweight':
+#         recs = [
+#             'Reduce daily intake by 300-500 kcal below your TDEE for steady loss',
+#             'Prioritize high-volume, low-calorie foods like leafy greens and soups',
+#             'Aim for at least 150-200 min/week of moderate cardio',
+#             'Eat protein first at each meal to improve satiety and reduce cravings',
+#             'Track your meals for 2 weeks to identify hidden calorie sources',
+#         ]
+#         avoids = [
+#             'Avoid refined carbohydrates (white bread, pastries, sugary cereals)',
+#             'Avoid fried foods and fast food - calorie density is very high',
+#             'Avoid eating while distracted (TV, phone) - leads to overconsumption',
+#             'Avoid alcohol - it adds empty calories and lowers inhibition around food',
+#             'Avoid skipping meals - paradoxically causes overeating later',
+#         ]
+#     else:
+#         recs = [
+#             'Consult a doctor or registered dietitian for a medically supervised plan',
+#             'Start with small sustainable changes - even 5-10% weight loss improves health',
+#             'Focus on low-glycemic foods to stabilize blood sugar and reduce hunger',
+#             'Begin with low-impact exercise (walking, swimming) to build consistency',
+#             'Track every meal to build awareness of total daily intake patterns',
+#         ]
+#         avoids = [
+#             'Avoid all sugary beverages including fruit juice, soda, and energy drinks',
+#             'Avoid high-sodium processed foods that cause water retention and bloating',
+#             'Avoid fad diets or extreme restriction - they cause rebound weight gain',
+#             'Avoid sedentary stretches >1 hour; set reminders to move every 45 min',
+#             'Avoid using food as emotional comfort - seek support if stress-eating',
+#         ]
+
+#     if gender.lower() == 'female':
+#         recs.append('Iron-rich foods (spinach, lentils) are especially important for women')
+#     else:
+#         recs.append('Adequate zinc from lean meat and seeds supports testosterone levels')
+
+#     return {
+#         'status':          status,
+#         'status_text':     status_text,
+#         'meal_pct':        round(pct, 1),
+#         'recommendations': recs[:5],
+#         'avoids':          avoids[:5],
+#         'bmi_category':    bmi_cat,
+#     }
+
+
+
 def get_recommendation(cal, daily, bmi, gender):
     bmi_cat     = get_bmi_category(bmi)
     meal_target = daily / 3
     pct         = (cal / daily) * 100 if daily > 0 else 0
 
+    # ✅ NEW: Determine if food is healthy/unhealthy based on BMI
+    food_health_status = 'healthy'  # default
+    food_health_message = ''
+    
+    if bmi_cat == 'Underweight':
+        # High calorie foods are HEALTHY for underweight people
+        if cal > meal_target * 1.2:
+            food_health_status = 'healthy'
+            food_health_message = '✅ Good choice! High-calorie foods help you gain healthy weight'
+        else:
+            food_health_status = 'neutral'
+            food_health_message = '⚠️ Consider adding more calories to reach your weight goals'
+    
+    elif bmi_cat == 'Normal':
+        # Balanced meals are healthy
+        if cal <= meal_target * 1.2:
+            food_health_status = 'healthy'
+            food_health_message = '✅ Healthy choice! This fits your balanced diet well'
+        else:
+            food_health_status = 'unhealthy'
+            food_health_message = '⚠️ High calories - may push you toward overweight if eaten regularly'
+    
+    elif bmi_cat == 'Overweight' or bmi_cat == 'Obese':
+        # Low calorie foods are HEALTHY for overweight/obese people
+        if cal <= meal_target * 0.8:
+            food_health_status = 'healthy'
+            food_health_message = '✅ Excellent choice! Low-calorie option supports weight loss'
+        elif cal <= meal_target:
+            food_health_status = 'neutral'
+            food_health_message = '⚠️ Moderate choice - within meal target but watch portions'
+        else:
+            food_health_status = 'unhealthy'
+            food_health_message = '🔴 Unhealthy for your BMI - too many calories, choose lighter options'
+
+    # Original status logic
     if cal <= meal_target:
         status, status_text = 'success', 'Safe meal - within single-meal target'
     elif cal <= meal_target * 1.2:
@@ -199,12 +329,14 @@ def get_recommendation(cal, daily, bmi, gender):
         recs.append('Adequate zinc from lean meat and seeds supports testosterone levels')
 
     return {
-        'status':          status,
-        'status_text':     status_text,
-        'meal_pct':        round(pct, 1),
-        'recommendations': recs[:5],
-        'avoids':          avoids[:5],
-        'bmi_category':    bmi_cat,
+        'status':              status,
+        'status_text':         status_text,
+        'meal_pct':            round(pct, 1),
+        'recommendations':     recs[:5],
+        'avoids':              avoids[:5],
+        'bmi_category':        bmi_cat,
+        'food_health_status':  food_health_status,     # ✅ NEW
+        'food_health_message': food_health_message,    # ✅ NEW
     }
 
 # ── Routes ────────────────────────────────────────────────────────────────
@@ -404,6 +536,8 @@ def classify_food_endpoint():
             'recommendations':   rec['recommendations'],
             'avoids':            rec['avoids'],
             'status':            rec['status'],
+            'food_health_status':  rec['food_health_status'],   # ✅ NEW
+            'food_health_message': rec['food_health_message'],
             'image':             fname,
         }), 200
 
