@@ -288,6 +288,17 @@ function Dashboard({ userId, user }) {
                     <span className="s-label">Detected Food</span>
                     <span className="s-val food-val">{result.food_name}</span>
                   </div>
+
+                   {/* ✅ NEW: Food Health Status Card */}
+  <div className="stat-card">
+    <span className="s-label">Food Health Status</span>
+    <span className={`s-val health-status health-${result.food_health_status}`}>
+      {result.food_health_status === 'healthy' ? '✅ Healthy' : 
+       result.food_health_status === 'unhealthy' ? '🔴 Unhealthy' : '⚠️ Neutral'}
+    </span>
+  </div>
+  
+                  
                   <div className="stat-card">
                     <span className="s-label">Calories</span>
                     <span className="s-val">{result.calories}<em> kcal</em></span>
@@ -305,6 +316,13 @@ function Dashboard({ userId, user }) {
                     <span className="s-val">{Math.round(result.daily_calories)}<em> kcal</em></span>
                   </div>
                 </div>
+
+                {/* ✅ NEW: Health Message Banner */}
+{result.food_health_message && (
+  <div className={`health-message health-msg-${result.food_health_status}`}>
+    {result.food_health_message}
+  </div>
+)}
 
                 <div className="progress-section">
                   <div className="prog-header">
